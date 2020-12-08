@@ -17,12 +17,10 @@ int fp_copy(char *src_filepath, char *dst_filepath)
     fp_src = fopen(src_filepath, "r");
     fp_dst = fopen(dst_filepath, "w");
 
-    if (fp_src == NULL)
-    {
+    if (fp_src == NULL) {
        printf("Unable to open source file.\n");
        return 1;
-    }
-    else if (fp_dst == NULL) {
+    } else if (fp_dst == NULL) {
         printf("Unable to create destination file.\n"); 
         return 1;
     }
