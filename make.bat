@@ -1,6 +1,6 @@
 @ECHO OFF
 
-SET spell_name=template
+SET spell_name=fs
 
 IF [%1]==[clang] (
     clang -shared %spell_name%.c -o %spell_name%.o

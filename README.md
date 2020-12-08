@@ -1,36 +1,19 @@
-# Template for Chaos C Extension Developers
-
-Fork this repository to create Chaos C extensions.
-
-To develop a Chaos C extension, first you need to have `gcc` or `clang` and Chaos headers.
-To have these requirements, run:
-
+Filesystem interface library of the Chaos language. You can install this spell with:
 ```
-make requirements
+occultist install fs
 ```
 
-At bare minimum, your C extension should be able to build using `gcc` with:
-
+and import it with:
 ```
-make
-```
-
-and for `clang`:
-
-```
-make clang
+import fs
 ```
 
-Your package name have to match with dynamic library name, e.g. if the package name is `template`
-then it must be `template(.so|.dylib|.dll)` and the `name` field in `occultist.json` have to be `template` too.
+## Filesystem operations
 
-This template provides the necessary `make` commands, an example C code and everything required to
-being compiled by `occultist` with proper file extensions on the target platform.
+### void fs.copy(str filepath1, str filepath2)
 
-This repository also provies the example GitHub workflows to automate the testing and memory leak checks for your extension.
+Copy the contents of a file to a new file.
 
-## Useful Links
-
-[**Developing Chaos C Extensions**](https://chaos-lang.org/docs/16_chaos_c_extensions_development)
-
-[**API Reference**](https://chaos-lang.org/docs/api)
+```
+kaos> fs.copy("README.txt", "README.md")
+```

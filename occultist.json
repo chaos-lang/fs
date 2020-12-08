@@ -1,14 +1,14 @@
 {
-    "name": "template",
-    "version": "1.1.0",
-    "description": "Template for Chaos C extension developers.",
-    "tags": ["official", "template"],
+    "name": "fs",
+    "version": "0.1.0",
+    "description": "Filesystem interface library of the Chaos language.",
+    "tags": ["official", "filesystem"],
     "type": "extension",
     "license": "MIT",
     "authors": [
         {
-            "name": "M. Mert Yildiran",
-            "email": "me@mertyildiran.com",
+            "name": "Noah Altunian",
+            "email": "nbaltunian@gmail.com",
             "role": "Maintainer"
         }
     ]
