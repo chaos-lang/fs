@@ -10,7 +10,7 @@ import fs
 
 ## Filesystem operations
 
-### void fs.copy(str filepath1, str filepath2)
+### void fs.copy(str src_filepath, str dst_filepath)
 
 Copy the contents of a file to a new file.
 

@@ -7,15 +7,15 @@
 
 // void fs.copy(str filepath1, str filepath2)
 
-int fp_copy(char *src, char *dst)
+int fp_copy(char *src_filepath, char *dst_filepath)
 {
     FILE *fp_src;
     FILE *fp_dst;
 
     char ch;
 
-    fp_src = fopen(src, "r");
-    fp_dst = fopen(dst, "w");
+    fp_src = fopen(src_filepath, "r");
+    fp_dst = fopen(dst_filepath, "w");
 
     if (fp_src == NULL)
     {
@@ -37,8 +37,8 @@ int fp_copy(char *src, char *dst)
 }
 
 char *copy_param_names[] = {
-    "fp_1",
-    "fp_2"
+    "src_filepath",
+    "dst_filepath"
 };
 unsigned copy_params_type[] = {
     K_STRING,
@@ -50,10 +50,10 @@ unsigned copy_params_secondary_type[] = {
 unsigned short copy_params_length = (unsigned short) sizeof(copy_params_type) / sizeof(unsigned);
 int KAOS_EXPORT Kaos_copy()
 {
-    char* fp_1 = kaos.getVariableString(copy_param_names[0]);
-    char* fp_2 = kaos.getVariableString(copy_param_names[1]);
-    fp_copy(fp_1, fp_2);
-    free(fp_1);
-    free(fp_2);
+    char* src_filepath = kaos.getVariableString(copy_param_names[0]);
+    char* dst_filepath = kaos.getVariableString(copy_param_names[1]);
+    fp_copy(src_filepath, dst_filepath);
+    free(src_filepath);
+    free(dst_filepath);
     return 0;
 }
