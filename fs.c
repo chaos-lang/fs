@@ -5,34 +5,7 @@
 
 // Filesystem operations
 
-// void fs.copy(str filepath1, str filepath2)
-
-int fp_copy(char *src_filepath, char *dst_filepath)
-{
-    FILE *fp_src;
-    FILE *fp_dst;
-
-    char ch;
-
-    fp_src = fopen(src_filepath, "r");
-    fp_dst = fopen(dst_filepath, "w");
-
-    if (fp_src == NULL) {
-       printf("Unable to open source file.\n");
-       return 1;
-    } else if (fp_dst == NULL) {
-        printf("Unable to create destination file.\n"); 
-        return 1;
-    }
-
-    while ((ch = fgetc(fp_src)) != EOF)
-        fputc(ch, fp_dst);
-    
-    fclose(fp_src);
-    fclose(fp_dst);
-
-    return 0;
-}
+// void fs.copy(str src_filepath, str dst_filepath)
 
 char *copy_param_names[] = {
     "src_filepath",
@@ -43,6 +16,7 @@ unsigned copy_params_type[] = {
     K_STRING
 };
 unsigned copy_params_secondary_type[] = {
+    K_ANY,
     K_ANY
 };
 unsigned short copy_params_length = (unsigned short) sizeof(copy_params_type) / sizeof(unsigned);
@@ -50,8 +24,72 @@ int KAOS_EXPORT Kaos_copy()
 {
     char* src_filepath = kaos.getVariableString(copy_param_names[0]);
     char* dst_filepath = kaos.getVariableString(copy_param_names[1]);
-    fp_copy(src_filepath, dst_filepath);
+
+    FILE *fp_src;
+    FILE *fp_dst;
+
+    fp_src = fopen(src_filepath, "r");
+    fp_dst = fopen(dst_filepath, "w");
     free(src_filepath);
     free(dst_filepath);
+
+    if (fp_src == NULL) {
+        kaos.raiseError("Unable to open the source file");
+    } else if (fp_dst == NULL) {
+        kaos.raiseError("Unable to create the destination file.");
+    }
+
+    char ch;
+    while ((ch = fgetc(fp_src)) != EOF)
+        fputc(ch, fp_dst);
+
+    fclose(fp_src);
+    fclose(fp_dst);
+    return 0;
+}
+
+// str fs.read(str filepath)
+
+char *read_param_names[] = {
+    "filepath"
+};
+unsigned read_params_type[] = {
+    K_STRING
+};
+unsigned read_params_secondary_type[] = {
+    K_ANY
+};
+unsigned short read_params_length = (unsigned short) sizeof(read_params_type) / sizeof(unsigned);
+int KAOS_EXPORT Kaos_read()
+{
+    char* filepath = kaos.getVariableString(read_param_names[0]);
+
+    FILE *fp = fopen(filepath, "rb");
+    free(filepath);
+
+    if (fp == NULL)
+        kaos.raiseError("Unable to open the file");
+
+    fseek(fp, 0, SEEK_END);
+    long fsize = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    char *text = malloc(fsize + 1);
+    fread(text, 1, fsize, fp);
+    fclose(fp);
+
+    text[fsize] = 0;
+
+    kaos.returnVariableString(text);
+    free(text);
+    return 0;
+}
+
+int KAOS_EXPORT KaosRegister(struct Kaos _kaos)
+{
+    kaos = _kaos;
+    kaos.defineFunction("copy", K_VOID, K_ANY, copy_param_names, copy_params_type, copy_params_secondary_type, copy_params_length, NULL, 0);
+    kaos.defineFunction("read", K_STRING, K_ANY, read_param_names, read_params_type, read_params_secondary_type, read_params_length, NULL, 0);
+
     return 0;
 }

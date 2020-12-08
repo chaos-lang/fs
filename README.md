@@ -1,19 +1,32 @@
 Filesystem interface library of the Chaos language. You can install this spell with:
-```
+
+```bash
 occultist install fs
 ```
 
 and import it with:
-```
+
+```chaos
 import fs
 ```
 
 ## Filesystem operations
 
-### void fs.copy(str src_filepath, str dst_filepath)
+### str fs.read(str filepath)
 
-Copy the contents of a file to a new file.
+Read the contents of a file on path `src_filepath` into a string.
+
+```chaos
+kaos> str text = fs.read('files/readme.txt')
+kaos> print text
+You read me!
 
 ```
-kaos> fs.copy("README.txt", "README.md")
+
+### void fs.copy(str src_filepath, str dst_filepath)
+
+Copy the contents of a file on path `src_filepath` to a new file on `dst_filepath`.
+
+```chaos
+kaos> fs.copy("files/copyme.txt", "ignored/copyme.txt")
 ```

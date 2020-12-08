@@ -1,3 +1,16 @@
-import template
+import fs
 
-template.hello()
+// fs.read
+str text = fs.read('files/readme.txt')
+print text
+del text
+
+// fs.copy
+str src_filepath = 'files/copyme.txt'
+str dst_filepath = 'ignored/copyme.txt'
+fs.copy(src_filepath, dst_filepath)
+str text = fs.read(dst_filepath)
+print text
+del text
+del src_filepath
+del dst_filepath

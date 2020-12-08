@@ -21,3 +21,7 @@ spells/
 
 # Chaos build directory
 build
+
+# Ignored directory
+ignored/*
+!ignored/.gitkeep
