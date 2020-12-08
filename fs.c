@@ -1,7 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "Chaos.h"
+
+void remove_char_from_string(char *str, char c)
+{
+    int i = 0;
+    int len = strlen(str) + 1;
+
+    for (i=0; i<len; i++) {
+        if (str[i] == c) {
+            strncpy(&str[i], &str[i+1], len - i);
+        }
+    }
+}
 
 // Filesystem operations
 
@@ -80,6 +93,9 @@ int KAOS_EXPORT Kaos_read()
 
     text[fsize] = 0;
 
+#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
+    remove_char_from_string(text, '\r');
+#endif
     kaos.returnVariableString(text);
     free(text);
     return 0;
