@@ -30,3 +30,11 @@ Copy the contents of a file on path `src_filepath` to a new file on `dst_filepat
 ```chaos
 kaos> fs.copy("files/copyme.txt", "ignored/copyme.txt")
 ```
+
+### void fs.rename(str oldpath, str newpath)
+
+Rename file `oldpath` to `newpath`.
+
+```chaos
+kaos> fs.rename('hello.txt', 'goodbye.txt')
+```

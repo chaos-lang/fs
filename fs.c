@@ -102,11 +102,41 @@ int KAOS_EXPORT Kaos_read()
     return 0;
 }
 
+// void fs.rename(str oldpath, str newpath)
+
+char *rename_param_names[] = {
+    "oldpath",
+    "newpath"
+};
+unsigned rename_params_type[] = {
+    K_STRING,
+    K_STRING
+};
+unsigned rename_params_secondary_type[] = {
+    K_ANY,
+    K_ANY
+};
+unsigned short rename_params_length = (unsigned short) sizeof(rename_params_type) / sizeof(unsigned);
+int KAOS_EXPORT Kaos_rename()
+{
+    int ret;
+
+    char* oldpath = kaos.getVariableString(rename_param_names[0]);
+    char* newpath = kaos.getVariableString(rename_param_names[1]);
+
+    ret = rename(oldpath, newpath);
+    if (ret != 0)
+        kaos.raiseError("Error when renaming the file.");
+
+    return 0;
+}
+
 int KAOS_EXPORT KaosRegister(struct Kaos _kaos)
 {
     kaos = _kaos;
     kaos.defineFunction("copy", K_VOID, K_ANY, copy_param_names, copy_params_type, copy_params_secondary_type, copy_params_length, NULL, 0);
     kaos.defineFunction("read", K_STRING, K_ANY, read_param_names, read_params_type, read_params_secondary_type, read_params_length, NULL, 0);
+    kaos.defineFunction("rename", K_STRING, K_ANY, rename_param_names, rename_params_type, rename_params_secondary_type, rename_params_length, NULL, 0);
 
     return 0;
 }
