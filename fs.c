@@ -136,7 +136,7 @@ int KAOS_EXPORT KaosRegister(struct Kaos _kaos)
     kaos = _kaos;
     kaos.defineFunction("copy", K_VOID, K_ANY, copy_param_names, copy_params_type, copy_params_secondary_type, copy_params_length, NULL, 0);
     kaos.defineFunction("read", K_STRING, K_ANY, read_param_names, read_params_type, read_params_secondary_type, read_params_length, NULL, 0);
-    kaos.defineFunction("rename", K_STRING, K_ANY, rename_param_names, rename_params_type, rename_params_secondary_type, rename_params_length, NULL, 0);
+    kaos.defineFunction("rename", K_VOID, K_ANY, rename_param_names, rename_params_type, rename_params_secondary_type, rename_params_length, NULL, 0);
 
     return 0;
 }
