@@ -42,13 +42,14 @@ int KAOS_EXPORT Kaos_copy()
     FILE *fp_dst;
 
     fp_src = fopen(src_filepath, "r");
-    fp_dst = fopen(dst_filepath, "w");
     free(src_filepath);
-    free(dst_filepath);
-
     if (fp_src == NULL) {
         kaos.raiseError("Unable to open the source file");
-    } else if (fp_dst == NULL) {
+    }
+
+    fp_dst = fopen(dst_filepath, "w");
+    free(dst_filepath);
+    if (fp_dst == NULL) {
         kaos.raiseError("Unable to create the destination file.");
     }
 
