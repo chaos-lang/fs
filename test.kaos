@@ -14,3 +14,13 @@ print text
 del text
 del src_filepath
 del dst_filepath
+
+// fs.rename
+str src_filepath = 'files/renameme.txt'
+str dst_filepath = 'ignored/renameme.txt'
+fs.rename(src_filepath, dst_filepath)
+str text = fs.read(dst_filepath)
+print text
+del text
+del src_filepath
+del dst_filepath
