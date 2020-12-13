@@ -16,7 +16,7 @@ del src_filepath
 del dst_filepath
 
 // fs.is_dir
-str path = 'files/is_dir'
+str path = 'files/'
 bool ret = fs.is_dir(path)
 print ret
 del path
