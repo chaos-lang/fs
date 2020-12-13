@@ -22,6 +22,13 @@ print ret
 del path
 del ret
 
+// fs.is_file
+str path = 'files/file.txt'
+bool ret = fs.is_file(path)
+print ret
+del path
+del ret
+
 // fs.rename
 str src_filepath = 'files/renameme.txt'
 str dst_filepath = 'ignored/renameme.txt'

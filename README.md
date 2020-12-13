@@ -36,7 +36,15 @@ kaos> fs.copy("files/copyme.txt", "ignored/copyme.txt")
 Check if `path` is a directory.
 
 ```chaos
-kaos> fs.is_dir("/home/user/")
+kaos> fs.is_dir('/home/user/')
+```
+
+### bool fs.is_file(str path)
+
+Check if `path` is a file.
+
+```chaos
+kaos> fs.is_file('home/user/.bashrc')
 ```
 
 ### void fs.rename(str oldpath, str newpath)

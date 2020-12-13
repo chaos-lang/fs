@@ -83,10 +83,46 @@ int KAOS_EXPORT Kaos_is_dir()
     struct stat info;
     if (stat(path, &info) != 0) {
         char err[100];
-        sprintf(err, "Cannot acces '%s'", path);
+        sprintf(err, "Cannot access '%s'", path);
         kaos.raiseError(err);
     } else if (info.st_mode & S_IFDIR) {
        kaos.returnVariableBool(true);
+    } else {
+        kaos.returnVariableBool(false);
+    }
+
+    return 0;
+}
+
+// bool fs.is_file(str path)
+
+char *is_file_param_names[] = {
+    "path"
+};
+unsigned is_file_params_type[] = {
+    K_STRING
+};
+unsigned is_file_params_secondary_type[] = {
+    K_ANY
+};
+unsigned short is_file_params_length = (unsigned short) sizeof(is_file_params_type) / sizeof(unsigned);
+int KAOS_EXPORT Kaos_is_file()
+{
+    char* path = kaos.getVariableString(is_dir_param_names[0]);
+
+    FILE *fp;
+    fp = fopen(path, "r");
+    if (fp == NULL) {
+        char err[100];
+        sprintf(err, "Unable to access '%s'", path);
+        kaos.raiseError(err);
+        return -1;
+    }
+
+    struct stat info;
+    stat(path, &info);
+    if (S_ISREG(info.st_mode)) {
+        kaos.returnVariableBool(true);
     } else {
         kaos.returnVariableBool(false);
     }
@@ -170,6 +206,7 @@ int KAOS_EXPORT KaosRegister(struct Kaos _kaos)
     // File Operations
     kaos.defineFunction("copy", K_VOID, K_ANY, copy_param_names, copy_params_type, copy_params_secondary_type, copy_params_length, NULL, 0);
     kaos.defineFunction("is_dir", K_STRING, K_ANY, is_dir_param_names, is_dir_params_type, is_dir_params_secondary_type, is_dir_params_length, NULL, 0);
+    kaos.defineFunction("is_file", K_STRING, K_ANY, is_file_param_names, is_file_params_type, is_file_params_secondary_type, is_file_params_length, NULL, 0);
     kaos.defineFunction("read", K_STRING, K_ANY, read_param_names, read_params_type, read_params_secondary_type, read_params_length, NULL, 0);
     kaos.defineFunction("rename", K_VOID, K_ANY, rename_param_names, rename_params_type, rename_params_secondary_type, rename_params_length, NULL, 0);
 
