@@ -1,6 +1,8 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include "Chaos.h"
 
@@ -59,6 +61,36 @@ int KAOS_EXPORT Kaos_copy()
 
     fclose(fp_src);
     fclose(fp_dst);
+    return 0;
+}
+
+// bool fs.is_dir(str path)
+
+char *is_dir_param_names[] = {
+    "path"
+};
+unsigned is_dir_params_type[] = {
+    K_STRING
+};
+unsigned is_dir_params_secondary_type[] = {
+    K_ANY
+};
+unsigned short is_dir_params_length = (unsigned short) sizeof(is_dir_params_type) / sizeof(unsigned);
+int KAOS_EXPORT Kaos_is_dir()
+{
+    char* path = kaos.getVariableString(is_dir_param_names[0]);
+
+    struct stat info;
+    if (stat(path, &info) != 0) {
+        char err[100];
+        sprintf(err, "Cannot acces '%s'\n", path);
+        kaos.raiseError(err);
+    } else if (info.st_mode & S_IFDIR) {
+       kaos.returnVariableBool(true);
+    } else {
+        kaos.returnVariableBool(false);
+    }
+
     return 0;
 }
 
@@ -137,6 +169,7 @@ int KAOS_EXPORT KaosRegister(struct Kaos _kaos)
 
     // File Operations
     kaos.defineFunction("copy", K_VOID, K_ANY, copy_param_names, copy_params_type, copy_params_secondary_type, copy_params_length, NULL, 0);
+    kaos.defineFunction("is_dir", K_STRING, K_ANY, is_dir_param_names, is_dir_params_type, is_dir_params_secondary_type, is_dir_params_length, NULL, 0);
     kaos.defineFunction("read", K_STRING, K_ANY, read_param_names, read_params_type, read_params_secondary_type, read_params_length, NULL, 0);
     kaos.defineFunction("rename", K_VOID, K_ANY, rename_param_names, rename_params_type, rename_params_secondary_type, rename_params_length, NULL, 0);
 
