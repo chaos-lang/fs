@@ -108,7 +108,7 @@ unsigned is_file_params_secondary_type[] = {
 unsigned short is_file_params_length = (unsigned short) sizeof(is_file_params_type) / sizeof(unsigned);
 int KAOS_EXPORT Kaos_is_file()
 {
-    char* path = kaos.getVariableString(is_dir_param_names[0]);
+    char* path = kaos.getVariableString(is_file_param_names[0]);
 
     FILE *fp;
     fp = fopen(path, "r");
