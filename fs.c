@@ -83,7 +83,7 @@ int KAOS_EXPORT Kaos_is_dir()
     struct stat info;
     if (stat(path, &info) != 0) {
         char err[100];
-        sprintf(err, "Cannot acces '%s'\n", path);
+        sprintf(err, "Cannot acces '%s'", path);
         kaos.raiseError(err);
     } else if (info.st_mode & S_IFDIR) {
        kaos.returnVariableBool(true);
