@@ -118,6 +118,7 @@ int KAOS_EXPORT Kaos_is_file()
         kaos.raiseError(err);
         return -1;
     }
+    fclose(fp);
 
     struct stat info;
     stat(path, &info);
