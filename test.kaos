@@ -1,18 +1,49 @@
 import fs
 
 // fs.read
-num fp = fs.open('files/readme.txt')
+num fp = fs.open('files/readme.txt', 'r')
 str text = fs.read(fp)
 print text
 del text
 fs.close(fp)
 del fp
 
+// fs.write
+str src_filepath = 'files/writeme.txt'
+str cpy_filepath = 'ignored/writeme.txt'
+fs.copy(src_filepath, cpy_filepath)
+num fp = fs.open(cpy_filepath, 'w')
+fs.write(fp, 'You wrote me!\n')
+fs.close(fp)
+fp = fs.open(cpy_filepath, 'r')
+str text = fs.read(fp)
+print text
+del text
+fs.close(fp)
+del fp
+del src_filepath
+del cpy_filepath
+
+// fs.move
+str src_filepath = 'files/moveme.txt'
+str cpy_filepath = 'ignored/moveme.txt'
+fs.copy(src_filepath, cpy_filepath)
+str dst_filepath = 'ignored/moveme2.txt'
+fs.move(cpy_filepath, dst_filepath)
+num fp = fs.open(dst_filepath, 'r')
+str text = fs.read(fp)
+print text
+del text
+fs.close(fp)
+del fp
+del src_filepath
+del dst_filepath
+
 // fs.copy
 str src_filepath = 'files/copyme.txt'
 str dst_filepath = 'ignored/copyme.txt'
 fs.copy(src_filepath, dst_filepath)
-num fp = fs.open(dst_filepath)
+num fp = fs.open(dst_filepath, 'r')
 str text = fs.read(fp)
 print text
 del text
@@ -34,18 +65,3 @@ bool ret = fs.is_file(path)
 print ret
 del path
 del ret
-
-// fs.move
-str src_filepath = 'files/moveme.txt'
-str cpy_filepath = 'ignored/moveme.txt'
-fs.copy(src_filepath, cpy_filepath)
-str dst_filepath = 'ignored/moveme2.txt'
-fs.move(cpy_filepath, dst_filepath)
-num fp = fs.open(dst_filepath)
-str text = fs.read(fp)
-print text
-del text
-fs.close(fp)
-del fp
-del src_filepath
-del dst_filepath

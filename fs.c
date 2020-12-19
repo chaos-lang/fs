@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 #include <stdint.h>
+#include <sys/stat.h>
 
 #include "Chaos.h"
 
@@ -21,26 +21,31 @@ void remove_char_from_string(char *str, char c)
 }
 
 
-// Filesystem Operations
+// I/O
 
-// num fs.open(str filepath)
+// num fs.open(str filepath, str mode)
 
 char *open_param_names[] = {
-    "filepath"
+    "filepath",
+    "mode"
 };
 unsigned open_params_type[] = {
+    K_STRING,
     K_STRING
 };
 unsigned open_params_secondary_type[] = {
+    K_ANY,
     K_ANY
 };
 unsigned short open_params_length = (unsigned short) sizeof(open_params_type) / sizeof(unsigned);
 int KAOS_EXPORT Kaos_open()
 {
     char* filepath = kaos.getVariableString(open_param_names[0]);
+    char* mode = kaos.getVariableString(open_param_names[1]);
 
-    FILE *fp = fopen(filepath, "rb");
+    FILE *fp = fopen(filepath, mode);
     free(filepath);
+    free(mode);
 
     if (fp == NULL)
         kaos.raiseError("Unable to open the file");
@@ -102,6 +107,34 @@ int KAOS_EXPORT Kaos_read()
     free(text);
     return 0;
 }
+
+// void fs.write(num file_descriptor, str text)
+
+char *write_param_names[] = {
+    "file_descriptor",
+    "text"
+};
+unsigned write_params_type[] = {
+    K_NUMBER,
+    K_STRING
+};
+unsigned write_params_secondary_type[] = {
+    K_ANY,
+    K_ANY
+};
+unsigned short write_params_length = (unsigned short) sizeof(write_params_type) / sizeof(unsigned);
+int KAOS_EXPORT Kaos_write()
+{
+    long long file_descriptor_int = kaos.getVariableInt(close_param_names[0]);
+    char *text = kaos.getVariableString(write_param_names[1]);
+    FILE *fp = (FILE* ) file_descriptor_int;
+    fprintf(fp, "%s", text);
+    free(text);
+    return 0;
+}
+
+
+// Filesystem Operations
 
 // void fs.move(str oldpath, str newpath)
 
@@ -252,10 +285,13 @@ int KAOS_EXPORT KaosRegister(struct Kaos _kaos)
 {
     kaos = _kaos;
 
-    // Filesystem Operations
+    // I/O
     kaos.defineFunction("open", K_STRING, K_ANY, open_param_names, open_params_type, open_params_secondary_type, open_params_length, NULL, 0);
     kaos.defineFunction("close", K_VOID, K_ANY, close_param_names, close_params_type, close_params_secondary_type, close_params_length, NULL, 0);
     kaos.defineFunction("read", K_STRING, K_ANY, read_param_names, read_params_type, read_params_secondary_type, read_params_length, NULL, 0);
+    kaos.defineFunction("write", K_VOID, K_ANY, write_param_names, write_params_type, write_params_secondary_type, write_params_length, NULL, 0);
+
+    // Filesystem Operations
     kaos.defineFunction("move", K_VOID, K_ANY, move_param_names, move_params_type, move_params_secondary_type, move_params_length, NULL, 0);
     kaos.defineFunction("copy", K_VOID, K_ANY, copy_param_names, copy_params_type, copy_params_secondary_type, copy_params_length, NULL, 0);
     kaos.defineFunction("is_dir", K_STRING, K_ANY, is_dir_param_names, is_dir_params_type, is_dir_params_secondary_type, is_dir_params_length, NULL, 0);

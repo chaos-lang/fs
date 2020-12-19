@@ -10,15 +10,18 @@ and import it with:
 import fs
 ```
 
-## Filesystem Operations
+## I/O
 
-### num fs.open(str filepath)
+### num fs.open(str filepath, str mode)
 
-Open a file on path `filepath` and return the file descriptor.
+Open a file on path `filepath` with the file access mode `mode` and return the file descriptor.
 
 ```chaos
-kaos> num fp = fs.open("files/readme.txt")
+kaos> num fp = fs.open("files/readme.txt", "r")
 ```
+
+The list of file access modes are
+same as the `fopen` in C. (see [reference](https://en.cppreference.com/w/cpp/io/c/fopen))
 
 ### void fs.close(num file_descriptor)
 
@@ -33,11 +36,25 @@ kaos> fs.close(fp)
 Read the contents of a file given by the `file_descriptor` into a string.
 
 ```chaos
+kaos> num fp = fs.open("files/readme.txt", "r")
 kaos> str text = fs.read(fp)
+kaos> fs.close(fp)
 kaos> print text
 You read me!
 
 ```
+
+### void fs.write(num file_descriptor, str text)
+
+Write the contents to a file given by the `file_descriptor`.
+
+```chaos
+kaos> num fp = fs.open("files/writeme.txt", "w")
+kaos> fs.write(fp, "You wrote me!\n")
+kaos> fs.close(fp)
+```
+
+## Filesystem Operations
 
 ### void fs.move(str old_path, str new_path)
 
