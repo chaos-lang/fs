@@ -17,7 +17,7 @@ import fs
 Read the contents of a file on path `src_filepath` into a string.
 
 ```chaos
-kaos> str text = fs.read('files/readme.txt')
+kaos> str text = fs.read("files/readme.txt")
 kaos> print text
 You read me!
 
@@ -36,7 +36,7 @@ kaos> fs.copy("files/copyme.txt", "ignored/copyme.txt")
 Check if `path` is a directory.
 
 ```chaos
-kaos> fs.is_dir('/home/user/')
+kaos> fs.is_dir("files/")
 ```
 
 ### bool fs.is_file(str path)
@@ -44,13 +44,13 @@ kaos> fs.is_dir('/home/user/')
 Check if `path` is a file.
 
 ```chaos
-kaos> fs.is_file('home/user/.bashrc')
+kaos> fs.is_file("files/readme.txt")
 ```
 
-### void fs.rename(str oldpath, str newpath)
+### void fs.move(str old_path, str new_path)
 
-Rename file `oldpath` to `newpath`.
+Move a file from `old_path` to `new_path`.
 
 ```chaos
-kaos> fs.rename('hello.txt', 'goodbye.txt')
+kaos> fs.move("files/moveme.txt", "ignored/moveme.txt")
 ```

@@ -86,10 +86,11 @@ int KAOS_EXPORT Kaos_is_dir()
         sprintf(err, "Cannot access '%s'", path);
         kaos.raiseError(err);
     } else if (info.st_mode & S_IFDIR) {
-       kaos.returnVariableBool(true);
+        kaos.returnVariableBool(true);
     } else {
         kaos.returnVariableBool(false);
     }
+    free(path);
 
     return 0;
 }
@@ -122,6 +123,7 @@ int KAOS_EXPORT Kaos_is_file()
 
     struct stat info;
     stat(path, &info);
+    free(path);
     if (S_ISREG(info.st_mode)) {
         kaos.returnVariableBool(true);
     } else {
@@ -171,29 +173,31 @@ int KAOS_EXPORT Kaos_read()
     return 0;
 }
 
-// void fs.rename(str oldpath, str newpath)
+// void fs.move(str oldpath, str newpath)
 
-char *rename_param_names[] = {
+char *move_param_names[] = {
     "oldpath",
     "newpath"
 };
-unsigned rename_params_type[] = {
+unsigned move_params_type[] = {
     K_STRING,
     K_STRING
 };
-unsigned rename_params_secondary_type[] = {
+unsigned move_params_secondary_type[] = {
     K_ANY,
     K_ANY
 };
-unsigned short rename_params_length = (unsigned short) sizeof(rename_params_type) / sizeof(unsigned);
-int KAOS_EXPORT Kaos_rename()
+unsigned short move_params_length = (unsigned short) sizeof(move_params_type) / sizeof(unsigned);
+int KAOS_EXPORT Kaos_move()
 {
     int ret;
 
-    char* oldpath = kaos.getVariableString(rename_param_names[0]);
-    char* newpath = kaos.getVariableString(rename_param_names[1]);
+    char* old_path = kaos.getVariableString(move_param_names[0]);
+    char* new_path = kaos.getVariableString(move_param_names[1]);
 
-    ret = rename(oldpath, newpath);
+    ret = rename(old_path, new_path);
+    free(old_path);
+    free(new_path);
     if (ret != 0)
         kaos.raiseError("Error when renaming the file.");
 
@@ -209,7 +213,7 @@ int KAOS_EXPORT KaosRegister(struct Kaos _kaos)
     kaos.defineFunction("is_dir", K_STRING, K_ANY, is_dir_param_names, is_dir_params_type, is_dir_params_secondary_type, is_dir_params_length, NULL, 0);
     kaos.defineFunction("is_file", K_STRING, K_ANY, is_file_param_names, is_file_params_type, is_file_params_secondary_type, is_file_params_length, NULL, 0);
     kaos.defineFunction("read", K_STRING, K_ANY, read_param_names, read_params_type, read_params_secondary_type, read_params_length, NULL, 0);
-    kaos.defineFunction("rename", K_VOID, K_ANY, rename_param_names, rename_params_type, rename_params_secondary_type, rename_params_length, NULL, 0);
+    kaos.defineFunction("move", K_VOID, K_ANY, move_param_names, move_params_type, move_params_secondary_type, move_params_length, NULL, 0);
 
     return 0;
 }

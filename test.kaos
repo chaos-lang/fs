@@ -23,16 +23,18 @@ del path
 del ret
 
 // fs.is_file
-str path = 'files/file.txt'
+str path = 'files/readme.txt'
 bool ret = fs.is_file(path)
 print ret
 del path
 del ret
 
-// fs.rename
-str src_filepath = 'files/renameme.txt'
-str dst_filepath = 'ignored/renameme.txt'
-fs.rename(src_filepath, dst_filepath)
+// fs.move
+str src_filepath = 'files/moveme.txt'
+str cpy_filepath = 'ignored/moveme.txt'
+fs.copy(src_filepath, cpy_filepath)
+str dst_filepath = 'ignored/moveme2.txt'
+fs.move(cpy_filepath, dst_filepath)
 str text = fs.read(dst_filepath)
 print text
 del text
