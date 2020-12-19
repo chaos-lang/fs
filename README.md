@@ -10,17 +10,41 @@ and import it with:
 import fs
 ```
 
-## Filesystem operations
+## Filesystem Operations
 
-### str fs.read(str filepath)
+### num fs.open(str filepath)
 
-Read the contents of a file on path `src_filepath` into a string.
+Open a file on path `filepath` and return the file descriptor.
 
 ```chaos
-kaos> str text = fs.read("files/readme.txt")
+kaos> num fp = fs.open("files/readme.txt")
+```
+
+### void fs.close(num file_descriptor)
+
+Close a file given by the `file_descriptor`.
+
+```chaos
+kaos> fs.close(fp)
+```
+
+### str fs.read(num file_descriptor)
+
+Read the contents of a file given by the `file_descriptor` into a string.
+
+```chaos
+kaos> str text = fs.read(fp)
 kaos> print text
 You read me!
 
+```
+
+### void fs.move(str old_path, str new_path)
+
+Move a file from `old_path` to `new_path`.
+
+```chaos
+kaos> fs.move("files/moveme.txt", "ignored/moveme.txt")
 ```
 
 ### void fs.copy(str src_filepath, str dst_filepath)
@@ -45,12 +69,4 @@ Check if `path` is a file.
 
 ```chaos
 kaos> fs.is_file("files/readme.txt")
-```
-
-### void fs.move(str old_path, str new_path)
-
-Move a file from `old_path` to `new_path`.
-
-```chaos
-kaos> fs.move("files/moveme.txt", "ignored/moveme.txt")
 ```

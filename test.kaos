@@ -1,17 +1,23 @@
 import fs
 
 // fs.read
-str text = fs.read('files/readme.txt')
+num fp = fs.open('files/readme.txt')
+str text = fs.read(fp)
 print text
 del text
+fs.close(fp)
+del fp
 
 // fs.copy
 str src_filepath = 'files/copyme.txt'
 str dst_filepath = 'ignored/copyme.txt'
 fs.copy(src_filepath, dst_filepath)
-str text = fs.read(dst_filepath)
+num fp = fs.open(dst_filepath)
+str text = fs.read(fp)
 print text
 del text
+fs.close(fp)
+del fp
 del src_filepath
 del dst_filepath
 
@@ -35,8 +41,11 @@ str cpy_filepath = 'ignored/moveme.txt'
 fs.copy(src_filepath, cpy_filepath)
 str dst_filepath = 'ignored/moveme2.txt'
 fs.move(cpy_filepath, dst_filepath)
-str text = fs.read(dst_filepath)
+num fp = fs.open(dst_filepath)
+str text = fs.read(fp)
 print text
 del text
+fs.close(fp)
+del fp
 del src_filepath
 del dst_filepath

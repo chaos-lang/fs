@@ -3,8 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <stdint.h>
 
 #include "Chaos.h"
+
 
 void remove_char_from_string(char *str, char c)
 {
@@ -18,7 +20,119 @@ void remove_char_from_string(char *str, char c)
     }
 }
 
-// File Operations
+
+// Filesystem Operations
+
+// num fs.open(str filepath)
+
+char *open_param_names[] = {
+    "filepath"
+};
+unsigned open_params_type[] = {
+    K_STRING
+};
+unsigned open_params_secondary_type[] = {
+    K_ANY
+};
+unsigned short open_params_length = (unsigned short) sizeof(open_params_type) / sizeof(unsigned);
+int KAOS_EXPORT Kaos_open()
+{
+    char* filepath = kaos.getVariableString(open_param_names[0]);
+
+    FILE *fp = fopen(filepath, "rb");
+    free(filepath);
+
+    if (fp == NULL)
+        kaos.raiseError("Unable to open the file");
+
+    kaos.returnVariableInt((intptr_t) fp);
+    return 0;
+}
+
+// void fs.close(num file_descriptor)
+
+char *close_param_names[] = {
+    "file_descriptor"
+};
+unsigned close_params_type[] = {
+    K_NUMBER
+};
+unsigned close_params_secondary_type[] = {
+    K_ANY
+};
+unsigned short close_params_length = (unsigned short) sizeof(close_params_type) / sizeof(unsigned);
+int KAOS_EXPORT Kaos_close()
+{
+    long long file_descriptor_int = kaos.getVariableInt(close_param_names[0]);
+    fclose((FILE* ) file_descriptor_int);
+    return 0;
+}
+
+// str fs.read(num file_descriptor)
+
+char *read_param_names[] = {
+    "file_descriptor"
+};
+unsigned read_params_type[] = {
+    K_NUMBER
+};
+unsigned read_params_secondary_type[] = {
+    K_ANY
+};
+unsigned short read_params_length = (unsigned short) sizeof(read_params_type) / sizeof(unsigned);
+int KAOS_EXPORT Kaos_read()
+{
+    long long file_descriptor_int = kaos.getVariableInt(close_param_names[0]);
+
+    FILE *fp = (FILE* ) file_descriptor_int;
+
+    fseek(fp, 0, SEEK_END);
+    long fsize = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    char *text = malloc(fsize + 1);
+    fread(text, 1, fsize, fp);
+
+    text[fsize] = 0;
+
+#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
+    remove_char_from_string(text, '\r');
+#endif
+    kaos.returnVariableString(text);
+    free(text);
+    return 0;
+}
+
+// void fs.move(str oldpath, str newpath)
+
+char *move_param_names[] = {
+    "oldpath",
+    "newpath"
+};
+unsigned move_params_type[] = {
+    K_STRING,
+    K_STRING
+};
+unsigned move_params_secondary_type[] = {
+    K_ANY,
+    K_ANY
+};
+unsigned short move_params_length = (unsigned short) sizeof(move_params_type) / sizeof(unsigned);
+int KAOS_EXPORT Kaos_move()
+{
+    int ret;
+
+    char* old_path = kaos.getVariableString(move_param_names[0]);
+    char* new_path = kaos.getVariableString(move_param_names[1]);
+
+    ret = rename(old_path, new_path);
+    free(old_path);
+    free(new_path);
+    if (ret != 0)
+        kaos.raiseError("Error when renaming the file.");
+
+    return 0;
+}
 
 // void fs.copy(str src_filepath, str dst_filepath)
 
@@ -133,87 +247,19 @@ int KAOS_EXPORT Kaos_is_file()
     return 0;
 }
 
-// str fs.read(str filepath)
-
-char *read_param_names[] = {
-    "filepath"
-};
-unsigned read_params_type[] = {
-    K_STRING
-};
-unsigned read_params_secondary_type[] = {
-    K_ANY
-};
-unsigned short read_params_length = (unsigned short) sizeof(read_params_type) / sizeof(unsigned);
-int KAOS_EXPORT Kaos_read()
-{
-    char* filepath = kaos.getVariableString(read_param_names[0]);
-
-    FILE *fp = fopen(filepath, "rb");
-    free(filepath);
-
-    if (fp == NULL)
-        kaos.raiseError("Unable to open the file");
-
-    fseek(fp, 0, SEEK_END);
-    long fsize = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
-
-    char *text = malloc(fsize + 1);
-    fread(text, 1, fsize, fp);
-    fclose(fp);
-
-    text[fsize] = 0;
-
-#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
-    remove_char_from_string(text, '\r');
-#endif
-    kaos.returnVariableString(text);
-    free(text);
-    return 0;
-}
-
-// void fs.move(str oldpath, str newpath)
-
-char *move_param_names[] = {
-    "oldpath",
-    "newpath"
-};
-unsigned move_params_type[] = {
-    K_STRING,
-    K_STRING
-};
-unsigned move_params_secondary_type[] = {
-    K_ANY,
-    K_ANY
-};
-unsigned short move_params_length = (unsigned short) sizeof(move_params_type) / sizeof(unsigned);
-int KAOS_EXPORT Kaos_move()
-{
-    int ret;
-
-    char* old_path = kaos.getVariableString(move_param_names[0]);
-    char* new_path = kaos.getVariableString(move_param_names[1]);
-
-    ret = rename(old_path, new_path);
-    free(old_path);
-    free(new_path);
-    if (ret != 0)
-        kaos.raiseError("Error when renaming the file.");
-
-    return 0;
-}
 
 int KAOS_EXPORT KaosRegister(struct Kaos _kaos)
 {
     kaos = _kaos;
 
-    // File Operations
+    // Filesystem Operations
+    kaos.defineFunction("open", K_STRING, K_ANY, open_param_names, open_params_type, open_params_secondary_type, open_params_length, NULL, 0);
+    kaos.defineFunction("close", K_VOID, K_ANY, close_param_names, close_params_type, close_params_secondary_type, close_params_length, NULL, 0);
+    kaos.defineFunction("read", K_STRING, K_ANY, read_param_names, read_params_type, read_params_secondary_type, read_params_length, NULL, 0);
+    kaos.defineFunction("move", K_VOID, K_ANY, move_param_names, move_params_type, move_params_secondary_type, move_params_length, NULL, 0);
     kaos.defineFunction("copy", K_VOID, K_ANY, copy_param_names, copy_params_type, copy_params_secondary_type, copy_params_length, NULL, 0);
     kaos.defineFunction("is_dir", K_STRING, K_ANY, is_dir_param_names, is_dir_params_type, is_dir_params_secondary_type, is_dir_params_length, NULL, 0);
     kaos.defineFunction("is_file", K_STRING, K_ANY, is_file_param_names, is_file_params_type, is_file_params_secondary_type, is_file_params_length, NULL, 0);
-    kaos.defineFunction("read", K_STRING, K_ANY, read_param_names, read_params_type, read_params_secondary_type, read_params_length, NULL, 0);
-    kaos.defineFunction("move", K_VOID, K_ANY, move_param_names, move_params_type, move_params_secondary_type, move_params_length, NULL, 0);
 
     return 0;
 }
