@@ -4,7 +4,7 @@
     "description": "Filesystem interface library of the Chaos language.",
     "tags": ["official", "filesystem"],
     "type": "extension",
-    "license": "MIT",
+    "license": "LGPL-3.0",
     "authors": [
         {
             "name": "Noah Altunian",

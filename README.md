@@ -12,7 +12,7 @@ import fs
 
 ## I/O
 
-### num fs.open(str filepath, str mode)
+### `num fs.open(str filepath, str mode)`
 
 Open a file on path `filepath` with the file access mode `mode` and return the file descriptor.
 
@@ -23,7 +23,7 @@ kaos> num fp = fs.open("files/readme.txt", "r")
 The list of file access modes are
 same as the `fopen` in C. (see [reference](https://en.cppreference.com/w/cpp/io/c/fopen))
 
-### void fs.close(num file_descriptor)
+### `void fs.close(num file_descriptor)`
 
 Close a file given by the `file_descriptor`.
 
@@ -31,7 +31,7 @@ Close a file given by the `file_descriptor`.
 kaos> fs.close(fp)
 ```
 
-### str fs.read(num file_descriptor)
+### `str fs.read(num file_descriptor)`
 
 Read the contents of a file given by the `file_descriptor` into a string.
 
@@ -44,7 +44,7 @@ You read me!
 
 ```
 
-### void fs.write(num file_descriptor, str text)
+### `void fs.write(num file_descriptor, str text)`
 
 Write the contents to a file given by the `file_descriptor`.
 
@@ -56,7 +56,7 @@ kaos> fs.close(fp)
 
 ## Filesystem Operations
 
-### void fs.move(str old_path, str new_path)
+### `void fs.move(str old_path, str new_path)`
 
 Move a file from `old_path` to `new_path`.
 
@@ -64,7 +64,7 @@ Move a file from `old_path` to `new_path`.
 kaos> fs.move("files/moveme.txt", "ignored/moveme.txt")
 ```
 
-### void fs.copy(str src_filepath, str dst_filepath)
+### `void fs.copy(str src_filepath, str dst_filepath)`
 
 Copy the contents of a file on path `src_filepath` to a new file on `dst_filepath`.
 
@@ -72,7 +72,7 @@ Copy the contents of a file on path `src_filepath` to a new file on `dst_filepat
 kaos> fs.copy("files/copyme.txt", "ignored/copyme.txt")
 ```
 
-### bool fs.is_dir(str path)
+### `bool fs.is_dir(str path)`
 
 Check if `path` is a directory.
 
@@ -80,7 +80,7 @@ Check if `path` is a directory.
 kaos> fs.is_dir("files/")
 ```
 
-### bool fs.is_file(str path)
+### `bool fs.is_file(str path)`
 
 Check if `path` is a file.
 
